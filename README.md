@@ -6,11 +6,11 @@ Ryan's Boomin' Beats
  1. Create Virtual Environment
     python -m venv ~/.venv/ryans-boomin-beats-venv
  2. Activate the Virtual Environment~
-    - Git Bash
+    ##### Git Bash
         source ~/.venv/ryans-boomin-beats-venv/Scripts/activate
-    - Powershell
+    ##### Powershell
         ~\.venv\ryans-boomin-beats-venv\Scripts\activate.ps1
-    - CMD
+    ##### CMD
         ~\.venv\ryans-boomin-beats-venv\Scripts\activate.bat
 
 ## Django
@@ -22,13 +22,13 @@ Ryan's Boomin' Beats
     django-admin startproject backend
 
 ### Run Server
-- Development Server
+##### Development Server
     python manage.py runserver
-- Specify Port
+##### Specify Port
     python manage.py runserver 8000
 
 ### Add Django App to Project
-python manage.py startapp <app_name>
+    python manage.py startapp <app_name>
 
 
 ## Svelte Kit
@@ -48,9 +48,10 @@ python manage.py startapp <app_name>
 
 
 ## Links
-- Django
-    https://docs.djangoproject.com/en/4.2/intro/tutorial01/
-- Spotipy
-    https://spotipy.readthedocs.io/en/2.22.1/
-    https://www.javatpoint.com/spotify-api-python
+### Django
+    - https://docs.djangoproject.com/en/4.2/intro/tutorial01/
+### Spotipy
+    - https://spotipy.readthedocs.io/en/2.22.1/
+    - https://www.javatpoint.com/spotify-api-python
+    - https://www.youtube.com/watch?v=cU8YH2rhN6A
     

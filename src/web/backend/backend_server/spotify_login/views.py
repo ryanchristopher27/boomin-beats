@@ -1,4 +1,5 @@
 from django.shortcuts import render
+import json
 
 # Create your views here.
 from django.http import HttpResponse
@@ -18,21 +19,28 @@ SCOPE = 'user-library-read'
 # export SPOTIPY_CLIENT_SECRET='your-spotify-client-secret'
 # export SPOTIPY_REDIRECT_URI='your-app-redirect-url'
 
+# import os
+# client_secret = os.environ['SPOTIPY_CLIENT_SECRET']
+
 def index(request):
 
-    scope = "user-library-read"
+    # scope = "user-library-read"
 
-    sp_oauth = SpotifyOAuth(client_id=CLIENT_ID, client_secret=CLIENT_SECRET, redirect_uri=REDIRECT_URI, scope=SCOPE)
+    sp_oauth = SpotifyOAuth(client_id=CLIENT_ID,
+                            client_secret=CLIENT_SECRET,
+                            redirect_uri=REDIRECT_URI,
+                            scope=SCOPE)
     # sp = Spotify(client_credentials_manager=SpotifyClientCredentials())
 
-    # access_token = sp_oauth.get_access_token()  
+    access_token_dict = sp_oauth.get_access_token()  
+    access_token = access_token_dict['access_token']
 
-    # sp = Spotify(auth_manager=sp_oauth)
+    spotify_obj = Spotify(auth=access_token)
 
     # https://open.spotify.com/track/6wsqVwoiVH2kde4k4KKAFU?si=d69de43ef5344e96
 
-    # track = sp.search(q='track:I Know?')
-    # print('Track', track)
+    track = spotify_obj.search(q='track:I Know?')
+    print('Track', json.dumps(track, sort_keys=False, indent=4))
 
     # results = sp.current_user_saved_tracks()
 
@@ -40,5 +48,5 @@ def index(request):
     #     track = item['track']
     #     print(idx, track['ar tists'][0]['name'], " - ", track['name'])
 
-    return HttpResponse("Done")
+    return HttpResponse(json.dumps(track, sort_keys=False, indent=4))
 
