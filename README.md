@@ -52,4 +52,5 @@ python manage.py startapp <app_name>
     https://docs.djangoproject.com/en/4.2/intro/tutorial01/
 - Spotipy
     https://spotipy.readthedocs.io/en/2.22.1/
+    https://www.javatpoint.com/spotify-api-python
     
