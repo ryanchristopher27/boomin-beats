@@ -1,5 +1,6 @@
 from django.shortcuts import render
 import json
+from django.http import JsonResponse
 
 # Create your views here.
 from django.http import HttpResponse
@@ -26,6 +27,9 @@ def index(request):
 
     # scope = "user-library-read"
 
+    searchValue = request.GET['searchValue']
+    print(searchValue)
+
     sp_oauth = SpotifyOAuth(client_id=CLIENT_ID,
                             client_secret=CLIENT_SECRET,
                             redirect_uri=REDIRECT_URI,
@@ -39,14 +43,34 @@ def index(request):
 
     # https://open.spotify.com/track/6wsqVwoiVH2kde4k4KKAFU?si=d69de43ef5344e96
 
-    track = spotify_obj.search(q='track:I Know?')
-    print('Track', json.dumps(track, sort_keys=False, indent=4))
+    tracks = spotify_obj.search(q='track:'+searchValue)
+    # print('Track', json.dumps(tracks, sort_keys=False, indent=4))
 
-    # results = sp.current_user_saved_tracks()
+    searchSuggestionObjects = []
+    for track in tracks['tracks']['items']:
+        searchSuggestionObjects.append({
+            'track': track['name'],
+            'artists': [artist['name'] for artist in track['artists']],
+            'id': track['id']
+        })
 
-    # for idx, item in enumerate(results['items']):
-    #     track = item['track']
-    #     print(idx, track['ar tists'][0]['name'], " - ", track['name'])
+    print(json.dumps(searchSuggestionObjects, sort_keys=False, indent=4))
 
-    return HttpResponse(json.dumps(track, sort_keys=False, indent=4))
+    response = {
+        'type': 'searchSongs',
+        'tracks': searchSuggestionObjects,
+    }
+
+    # return HttpResponse(json.dumps(searchSuggestionObjects, sort_keys=False, indent=4))
+
+    # Create a JsonResponse with the response data
+    json_response = JsonResponse(response)
+
+    # Set the CORS headers in the response
+    json_response["Access-Control-Allow-Origin"] = "http://localhost:5173"  # Replace with your frontend URL
+    json_response["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
+    json_response["Access-Control-Allow-Headers"] = "Content-Type"
+    json_response["Access-Control-Allow-Credentials"] = "true"
+
+    return json_response
 
