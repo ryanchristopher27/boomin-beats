@@ -27,11 +27,29 @@ Ryan's Boomin' Beats
 - Specify Port
     python manage.py runserver 8000
 
+### Add Django App to Project
+python manage.py startapp <app_name>
 
 
+## Svelte Kit
+### Install npm
+    npm create svelte@latest <app_name>
+    cd <app_name>
+    npm i
+
+### Run Server
+    npm run dev
+
+
+## Spotipy
+### Install
+    pip install spotipy --upgrade
 
 
 
 ## Links
 - Django
     https://docs.djangoproject.com/en/4.2/intro/tutorial01/
+- Spotipy
+    https://spotipy.readthedocs.io/en/2.22.1/
+    
