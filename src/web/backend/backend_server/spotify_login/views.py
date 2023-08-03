@@ -49,7 +49,7 @@ def index(request):
     searchSuggestionObjects = []
     for track in tracks['tracks']['items']:
         searchSuggestionObjects.append({
-            'track': track['name'],
+            'title': track['name'],
             'artists': [artist['name'] for artist in track['artists']],
             'id': track['id']
         })
