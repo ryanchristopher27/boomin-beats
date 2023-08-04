@@ -3,14 +3,15 @@
 	import welcome from '$lib/images/svelte-welcome.webp';
 	import welcome_fallback from '$lib/images/svelte-welcome.png';
 
-	let searchValue = ''
+	let searchValue = '';
 
-	let selectedSong = ''
-	let selectedId = ''
+	let selectedTitle = '';
+	let selectedArtists = [];
+	let selectedId = '';
 
-	let selectedTrack = {}
+	let isSelected = false;
 
-	let tracks = []
+	let tracks = [];
 
 	const myHeaders = new Headers();
 	myHeaders.append("Access-Control-Allow-Origin", "http://127.0.0.1:8000/spotify-login/");
@@ -20,36 +21,41 @@
 			let url = `http://127.0.0.1:8000/spotify-login/?searchValue=${searchValue}`
 
 			const response = await fetch(url)
-			// , {
-			// 	method: 'GET',
-			// 	headers: myHeaders,
-			// 	mode: 'cors',
-			// })
 
 			if (!response.ok) {
 				throw new Error('Network response was not ok.');
 			}
+
 			const jsonResponse = await response.json()
 			tracks = jsonResponse.tracks
-			selectedSong = tracks[0].title
-			selectedTrack = tracks[0]
+			selectedTitle = tracks[0].title
+			selectedArtists = tracks[0].artists
 			selectedId = tracks[0].id
-			searchValue = selectedSong
+			// searchValue = selectedSong
 		} catch (error) {
 			// Handle any errors that occurred during the fetch request.
 			console.error('Error fetching data:', error);
 		}
 	}
 
-	let updatedSelectedSong = () => {
-		searchValue = selectedSong;
-		for (let i = 0; i < tracks.length; i++) {
-			if (tracks[i].title == selectedSong) {
-				selectedId = tracks[i].id;
-			}
-		}
+	let updatedSelectedSong = (selectedTrack, index) => {
+		isSelected = true;
+		searchValue = selectedTrack;
+		// for (let i = 0; i < tracks.length; i++) {
+		// 	if (tracks[i].title == selectedTrack) {
+		// 		selectedId = tracks[i].id;
+		// 		selectedTrack = tracks[i]
+		// 	}
+		// }
+		selectedTitle = tracks[index].title
+		selectedArtists = tracks[index].artists
+		selectedId = tracks[index].id
 		console.log('Search Value: ', searchValue)
+		console.log('selected Title: ', selectedTitle)
+		console.log('selected Artists: ', selectedArtists)
 		console.log('selected ID: ', selectedId)
+
+		tracks = []
 	}
 
 	$: embedUrl = `https://open.spotify.com/embed/track/${selectedId}?utm_source=generator&theme=0`
@@ -59,40 +65,45 @@
 </script>
 
 <svelte:head>
-	<title>Home</title>
-	<meta name="description" content="Svelte demo app" />
+	<title>Search</title>
+	<meta name="description" content="Song Search" />
 </svelte:head>
 
 <section>
-	<input type="text" placeholder="Search.." bind:value={searchValue}>
-	{#if tracks.length > 0}
-	<select name='search-dropdown' id='search-dropdown' bind:value={selectedSong} on:change={updatedSelectedSong}>
-		{#each tracks as track}
-			<option value={track.title}>{track.title} By: {track.artists[0]}</option> 
+	<div id='searchbar'>
+		<input type="text" placeholder="Search.." bind:value={searchValue} on:change={getSearchSongs} on:input={getSearchSongs}>
+		{#if tracks.length > 0}
+		{#each tracks as track, i}
+			<option value={track.title} on:click={() => {updatedSelectedSong(track.title, i)}}>{track.title} By: {track.artists[0]}</option>
+			<!-- <div class='search_dropdown' bind:value={track.title}>{track.title} By: {track.artists[0]}</div> -->
+			<!-- <a  on:click={updatedSelectedSong}>{track.title} By: {track.artists[0]}</a>  -->
 		{/each}
-	</select>
-	{/if}
-	<button value="Test" on:click={getSearchSongs}>Fetch SearchSongs</button>
+		{/if}
+		<!-- {#if tracks.length > 0}
+		<select name='search-dropdown' id='search-dropdown' bind:value={selectedSong} on:change={updatedSelectedSong}>
+			{#each tracks as track}
+				<option value={track.title}>{track.title} By: {track.artists[0]}</option> 
+			{/each}
+		</select>
+		{/if} -->
+		<!-- <button value="Test" on:click={getSearchSongs}>Fetch SearchSongs</button> -->
+	</div>
 
-	{#if selectedTrack.id}
+	<!-- {#if isSelected}
 	<iframe style="border-radius:12px" src={embedUrl} width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+	{/if} -->
+
+	{#if isSelected}
+	<div id='selected-song-div'>
+		<h2>Selected Song</h2>
+		<p id='selected-song-title'>{selectedTitle}</p>
+		<p id='selected-song-artist'>{selectedArtists}</p>
+		<p id='selected-song-id'>{selectedId}</p>
+	</div>
 	{/if}
-	<!-- <h1>
-		<span class="welcome">
-			<picture>
-				<source srcset={welcome} type="image/webp" />
-				<img src={welcome_fallback} alt="Welcome" />
-			</picture>
-		</span>
+	
+	<button id='get-recs-button'>Get Recommendations</button>
 
-		to your new<br />SvelteKit app
-	</h1> -->
-
-	<!-- <h2>
-		try editing <strong>src/routes/+page.svelte</strong>
-	</h2> -->
-
-	<!-- <Counter /> -->
 </section>
 
 <style>
