@@ -1,7 +1,5 @@
 <script>
-	import Counter from './Counter.svelte';
-	import welcome from '$lib/images/svelte-welcome.webp';
-	import welcome_fallback from '$lib/images/svelte-welcome.png';
+	import { Recommendations } from "$lib";
 
 	let searchValue = '';
 
@@ -13,12 +11,14 @@
 
 	let tracks = [];
 
+	let showRecommendations = false;
+
 	const myHeaders = new Headers();
-	myHeaders.append("Access-Control-Allow-Origin", "http://127.0.0.1:8000/spotify-login/");
+	myHeaders.append("Access-Control-Allow-Origin", "http://127.0.0.1:8000/search/");
 
 	async function getSearchSongs() {
 		try {
-			let url = `http://127.0.0.1:8000/spotify-login/?searchValue=${searchValue}`
+			let url = `http://127.0.0.1:8000/search/?searchValue=${searchValue}`
 
 			const response = await fetch(url)
 
@@ -41,12 +41,6 @@
 	let updatedSelectedSong = (selectedTrack, index) => {
 		isSelected = true;
 		searchValue = selectedTrack;
-		// for (let i = 0; i < tracks.length; i++) {
-		// 	if (tracks[i].title == selectedTrack) {
-		// 		selectedId = tracks[i].id;
-		// 		selectedTrack = tracks[i]
-		// 	}
-		// }
 		selectedTitle = tracks[index].title
 		selectedArtists = tracks[index].artists
 		selectedId = tracks[index].id
@@ -56,6 +50,11 @@
 		console.log('selected ID: ', selectedId)
 
 		tracks = []
+	}
+
+	let getRecommendations = () => {
+		console.log('Get Recommendations')
+		showRecommendations = true;
 	}
 
 	$: embedUrl = `https://open.spotify.com/embed/track/${selectedId}?utm_source=generator&theme=0`
@@ -93,16 +92,18 @@
 	<iframe style="border-radius:12px" src={embedUrl} width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
 	{/if} -->
 
-	{#if isSelected}
+	<!-- {#if isSelected}
 	<div id='selected-song-div'>
 		<h2>Selected Song</h2>
 		<p id='selected-song-title'>{selectedTitle}</p>
 		<p id='selected-song-artist'>{selectedArtists}</p>
 		<p id='selected-song-id'>{selectedId}</p>
 	</div>
-	{/if}
+	{/if} -->
 	
-	<button id='get-recs-button'>Get Recommendations</button>
+	<button id='get-recs-button' on:click={() => {getRecommendations()}}>Get Recommendations</button>
+
+	<Recommendations track_id={selectedId} number_of_songs={25} show_tracks={showRecommendations} />
 
 </section>
 

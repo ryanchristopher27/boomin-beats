@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import include, path
 
 urlpatterns = [
-    path("spotify-login/", include("backend_server.spotify_login.urls")),
+    path("search/", include("backend_server.search.urls")),
+    path("get-recommendations/", include("backend_server.get_recommendations.urls")),
     path("admin/", admin.site.urls),
 ]

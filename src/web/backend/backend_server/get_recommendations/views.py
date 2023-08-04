@@ -1,9 +1,9 @@
 from django.shortcuts import render
 import json
 from django.http import JsonResponse
-
-# Create your views here.
 from django.http import HttpResponse
+
+
 
 # Spotipy imports
 import spotipy
@@ -27,8 +27,8 @@ def index(request):
 
     # scope = "user-library-read"
 
-    searchValue = request.GET['searchValue']
-    print(searchValue)
+    track_id = request.GET['trackId']
+    number_of_songs = request.GET['numberOfSongs']
 
     sp_oauth = SpotifyOAuth(client_id=CLIENT_ID,
                             client_secret=CLIENT_SECRET,
@@ -43,25 +43,27 @@ def index(request):
 
     # https://open.spotify.com/track/6wsqVwoiVH2kde4k4KKAFU?si=d69de43ef5344e96
 
-    tracks = spotify_obj.search(q='track:'+searchValue)
+    # recommendatios_genres = spotify_obj.recommendation_genre_seeds()
+
+    recommendations = spotify_obj.recommendations(seed_tracks=[track_id], limit=number_of_songs)
     # print('Track', json.dumps(tracks, sort_keys=False, indent=4))
 
-    searchSuggestionObjects = []
-    for track in tracks['tracks']['items']:
-        searchSuggestionObjects.append({
+    # print(json.dumps(recommendations, sort_keys=False, indent=4))
+    recommendationsObjects = []
+    for track in recommendations['tracks']:
+        recommendationsObjects.append({
             'title': track['name'],
             'artists': [artist['name'] for artist in track['artists']],
             'id': track['id']
         })
 
-    print(json.dumps(searchSuggestionObjects, sort_keys=False, indent=4))
+    # return HttpResponse(json.dumps(recommendations, sort_keys=False, indent=4))
 
+    print(json.dumps(recommendationsObjects, sort_keys=False, indent=4))
     response = {
-        'type': 'searchSongs',
-        'tracks': searchSuggestionObjects,
+        'type': 'recommendations',
+        'tracks': recommendationsObjects,
     }
-
-    # return HttpResponse(json.dumps(searchSuggestionObjects, sort_keys=False, indent=4))
 
     # Create a JsonResponse with the response data
     json_response = JsonResponse(response)
