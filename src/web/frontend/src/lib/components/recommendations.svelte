@@ -52,8 +52,18 @@
 
 <div id='recs-wrapper-div'>
     {#if show_tracks}
-    {#each recommendations as track}
+    <div class='rec-col-desc'>
+        <div class='col-num'>#</div>
+        <div class='col-title'>Title</div>
+        <div class='col-album'>Album</div>
+        <div class='col-duration'>Duration</div>
+    </div>
+    <hr class='track-splitter'>
+    {#each recommendations as track, i}
     <div class='rec-song-div'>
+        <div class='rec-number-div'>
+            {i+1}
+        </div>
         <img src={track.image} alt="{track.album}" class="track-image"/>
         <div class='title-artist-div'>
             <div class='title-div'>
@@ -96,18 +106,47 @@
         margin-top: 20px;
         margin: 20px 10%;
         min-width: 640px;
+        color: white;
+    }
+
+    .rec-col-desc {
+        display: flex;
+        height: 1rem;
+    }
+
+    .col-num {
+        width: 5%;
+        text-align: center;
+    }
+    .col-title {
+        width: 47%;
+        text-align: center;
+    }
+    .col-album {
+        width: 27%;
+        text-align: center;
+    }
+    .col-duration {
+        width: 21%;
+        text-align: center;
     }
 
     .rec-song-div {
         display: flex;
         height: 64px;
-        color: white;
+        /* color: white; */
         /* border: 2px solid white; */
         /* vertical-align: middle; */
         align-items: center;
         /* justify-content: center; */
         /* border-bottom: 2px solid var(--color-light-blue); */
 
+    }
+
+    .rec-number-div {
+        width: 5%;
+        align-items: center;
+        text-align: center;
     }
 
     .title-artist-div {
@@ -151,7 +190,7 @@
     }
 
     .album-div {
-        width: 30%;
+        width: 25%;
         padding: 0 10px;
         vertical-align: middle;
         text-align: center;

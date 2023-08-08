@@ -134,6 +134,7 @@
 		background-color: var(--color-dark-gray);
 		min-width: 800px;
 		border-radius: 20px;
+		margin-top: 65px;
 	}
 
 	.search-div {

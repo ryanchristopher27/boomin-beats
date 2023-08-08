@@ -41,7 +41,13 @@
 	header {
 		display: flex;
 		justify-content: space-between;
-		margin: var(--primary-spacing) var(--primary-spacing) 0 var(--primary-spacing);
+		position: fixed;
+		top: 0;
+		width: 98%;
+		min-width: 800px;
+		background-color: var(--color-light-blue);
+		/* margin: var(--primary-spacing) var(--primary-spacing) 0 var(--primary-spacing); */
+		padding: var(--primary-spacing);
 	}
 
 	.header-div {
