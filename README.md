@@ -55,3 +55,11 @@ Ryan's Boomin' Beats
     - https://www.javatpoint.com/spotify-api-python
     - https://www.youtube.com/watch?v=cU8YH2rhN6A
     
+
+## Styles
+### Color Palette
+    - Light Blue: #5ec9ff
+    - Purple: #a235ff
+    - Dark Gray: #242424
+    - Gray: #444444
+    

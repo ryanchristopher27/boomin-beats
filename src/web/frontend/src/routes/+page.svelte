@@ -61,6 +61,8 @@
 
 	$: console.log(tracks)
 
+	$: console.log(selectedTitle, selectedId)
+
 </script>
 
 <svelte:head>
@@ -68,44 +70,28 @@
 	<meta name="description" content="Song Search" />
 </svelte:head>
 
-<section>
-	<div id='searchbar'>
-		<input type="text" placeholder="Search.." bind:value={searchValue} on:change={getSearchSongs} on:input={getSearchSongs}>
+<div class='body-div'>
+	<div class='search-div'>
+		<!-- <input type="text" placeholder="Search.." bind:value={searchValue} on:change={getSearchSongs} on:input={getSearchSongs}>
 		{#if tracks.length > 0}
 		{#each tracks as track, i}
 			<option value={track.title} on:click={() => {updatedSelectedSong(track.title, i)}}>{track.title} By: {track.artists[0]}</option>
-			<!-- <div class='search_dropdown' bind:value={track.title}>{track.title} By: {track.artists[0]}</div> -->
-			<!-- <a  on:click={updatedSelectedSong}>{track.title} By: {track.artists[0]}</a>  -->
 		{/each}
-		{/if}
-		<!-- {#if tracks.length > 0}
-		<select name='search-dropdown' id='search-dropdown' bind:value={selectedSong} on:change={updatedSelectedSong}>
-			{#each tracks as track}
-				<option value={track.title}>{track.title} By: {track.artists[0]}</option> 
-			{/each}
-		</select>
 		{/if} -->
-		<!-- <button value="Test" on:click={getSearchSongs}>Fetch SearchSongs</button> -->
-	</div>
 
-	<!-- {#if isSelected}
-	<iframe style="border-radius:12px" src={embedUrl} width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-	{/if} -->
-
-	<!-- {#if isSelected}
-	<div id='selected-song-div'>
-		<h2>Selected Song</h2>
-		<p id='selected-song-title'>{selectedTitle}</p>
-		<p id='selected-song-artist'>{selectedArtists}</p>
-		<p id='selected-song-id'>{selectedId}</p>
+		<input class="searchbar" list="searchbar" name="searchbar" placeholder="Search.." bind:value={searchValue} on:change={getSearchSongs} on:input={getSearchSongs} />
+		<datalist id="searchbar">
+		{#each tracks as track, i}
+			<option value={track.title} on:click={() => {updatedSelectedSong(track.title, i)}}>{track.title} By: {track.artists[0]}</option>
+		{/each}
+		</datalist>
+		<button id='get-recs-button' on:click={() => {getRecommendations()}}>Get Recs</button>
 	</div>
-	{/if} -->
 	
-	<button id='get-recs-button' on:click={() => {getRecommendations()}}>Get Recommendations</button>
 
 	<Recommendations track_id={selectedId} number_of_songs={25} show_tracks={showRecommendations} />
 
-</section>
+</div>
 
 <style>
 	section {
@@ -120,19 +106,45 @@
 		width: 100%;
 	}
 
-	.welcome {
-		display: block;
-		position: relative;
+	.body-div {
+		/* display: flex; */
+		/* height: 100vh; */
 		width: 100%;
-		height: 0;
-		padding: 0 0 calc(100% * 495 / 2048) 0;
+		background-color: var(--color-dark-gray);
+		min-width: 500px;
 	}
 
-	.welcome img {
-		position: absolute;
-		width: 100%;
-		height: 100%;
-		top: 0;
-		display: block;
+	.search-div {
+		display: flex;
+		width: 80%;
+		margin-left: 10%;
 	}
+
+	.searchbar {
+		height: 24px;
+		width: 90%;
+		min-width: 292px;
+		margin: 10px 0 0 0;
+		background-color: var(--color-dark-gray);
+		color: var(--color-light-blue);
+		border: 2px solid var(--color-light-blue);
+		border-radius: 10px;
+	}
+
+	#get-recs-button {
+		height: 30px;
+		width: 10%;
+		margin: 10px 0 0 10px;
+		min-width: 90px;
+		background-color: var(--color-dark-gray);
+		color: var(--color-light-blue);
+		border: 2px solid var(--color-light-blue);
+		border-radius: 10px;
+	}
+
+	#get-recs-button:hover {
+		background-color: var(--color-light-blue);
+		color: var(--color-dark-gray);
+	}
+
 </style>

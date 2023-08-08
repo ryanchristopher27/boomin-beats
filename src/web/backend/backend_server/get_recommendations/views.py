@@ -48,18 +48,24 @@ def index(request):
     recommendations = spotify_obj.recommendations(seed_tracks=[track_id], limit=number_of_songs)
     # print('Track', json.dumps(tracks, sort_keys=False, indent=4))
 
-    # print(json.dumps(recommendations, sort_keys=False, indent=4))
+    print(json.dumps(recommendations, sort_keys=False, indent=4))
     recommendationsObjects = []
     for track in recommendations['tracks']:
         recommendationsObjects.append({
             'title': track['name'],
             'artists': [artist['name'] for artist in track['artists']],
-            'id': track['id']
+            'id': track['id'],
+            'image': track['album']['images'][2]['url'],
+            'image_size': track['album']['images'][2]['height'],
+            'duration_ms': track['duration_ms'],
+            'explicit': track['explicit'],
+            'track_url': track['external_urls']['spotify'],
+            'album': track['album']['name'],
         })
 
     # return HttpResponse(json.dumps(recommendations, sort_keys=False, indent=4))
 
-    print(json.dumps(recommendationsObjects, sort_keys=False, indent=4))
+    # print(json.dumps(recommendationsObjects, sort_keys=False, indent=4))
     response = {
         'type': 'recommendations',
         'tracks': recommendationsObjects,
