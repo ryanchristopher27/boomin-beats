@@ -41,6 +41,7 @@
 	header {
 		display: flex;
 		justify-content: space-between;
+		margin: var(--primary-spacing) var(--primary-spacing) 0 var(--primary-spacing);
 	}
 
 	.header-div {
@@ -48,7 +49,9 @@
 		height: 50px;
 		background-color: #242424;
 		width: 100%;
+		min-width: 800px;
 		border-bottom: 2px solid var(--color-light-blue);
+		border-radius: 20px;
 	}
 
 	#boomin-beats-logo {

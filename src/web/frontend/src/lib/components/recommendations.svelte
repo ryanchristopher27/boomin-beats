@@ -1,10 +1,11 @@
 <script>
     export let track_id = '';
-    export let show_tracks = false;
     export let number_of_songs = 25;
+    
+    let show_tracks = false;
+    let recommendation_id = ''
 
     let recommendations = Array();
-
     let recommendations_ids = Array();
 
     async function getRecommendations() {
@@ -36,19 +37,24 @@
         );    
     }
 
-    $: if (show_tracks) {
+    $: if (track_id != '') {
+        show_tracks = true;
+    }
+
+    $: if (track_id != recommendation_id) {
+        recommendation_id = track_id
         getRecommendations()
     }
 
     $: console.log('Recommendations: ', recommendations)
-    $: console.log(recommendations_ids)
+    $: console.log('Track id: ', track_id)
 </script>
 
 <div id='recs-wrapper-div'>
     {#if show_tracks}
     {#each recommendations as track}
     <div class='rec-song-div'>
-        <img src={track.image} alt="Image" class="track-image"/>
+        <img src={track.image} alt="{track.album}" class="track-image"/>
         <div class='title-artist-div'>
             <div class='title-div'>
                 {track.title}
@@ -149,6 +155,8 @@
         padding: 0 10px;
         vertical-align: middle;
         text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
     }
 
     .duration-div {
