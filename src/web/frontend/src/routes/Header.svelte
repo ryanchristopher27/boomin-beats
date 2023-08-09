@@ -1,7 +1,6 @@
 <script>
 	import { page } from '$app/stores';
 	import { BoominBeatsLogo } from '$lib';
-	import github from '$lib/images/github.svg';
 
 	export let current_page = 'Home';
 </script>
@@ -9,7 +8,7 @@
 <header>
 	<div class="header-div">
 		<div class="logo-div">
-			<img src={BoominBeatsLogo} alt="SvelteKit" id="boomin-beats-logo"/>
+			<img src={BoominBeatsLogo} alt="BoominBeatsLogo" id="boomin-beats-logo"/>
 		</div>
 
 		<nav>
@@ -22,6 +21,13 @@
 				<a class="nav-button" href="/">Home</a>
 			</div>
 			{/if}
+
+			<div class='nav-button-div'>
+				<a class="nav-button" href="/account_analysis/">Account Analysis</a>
+			</div>
+			<div class='nav-button-div'>
+				<a class="nav-button" href="/profile/">Profile</a>
+			</div>
 			<!-- <svg viewBox="0 0 2 3" aria-hidden="true">
 				<path d="M0,0 L1,2 C1.5,3 1.5,3 2,3 L2,0 Z" />
 			</svg>

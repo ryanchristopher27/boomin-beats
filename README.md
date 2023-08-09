@@ -54,6 +54,10 @@ Ryan's Boomin' Beats
     - https://spotipy.readthedocs.io/en/2.22.1/
     - https://www.javatpoint.com/spotify-api-python
     - https://www.youtube.com/watch?v=cU8YH2rhN6A
+
+### Youtube
+    - https://www.youtube.com/watch?v=G_WFk4wg9fk
+    
     
 
 ## Styles
@@ -62,4 +66,3 @@ Ryan's Boomin' Beats
     - Purple: #a235ff
     - Dark Gray: #242424
     - Gray: #444444
-    
