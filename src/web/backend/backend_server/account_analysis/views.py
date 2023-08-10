@@ -13,7 +13,7 @@ from spotipy.oauth2 import SpotifyClientCredentials
 
 CLIENT_ID = 'a6e889c6521040a797bdda3dbb27b451'
 CLIENT_SECRET = '77e4125490d5481bb89b5891dbb4458c'
-REDIRECT_URI = 'https://example.com/callback'
+REDIRECT_URI = 'http://localhost:5173/profile'
 SCOPE = 'user-library-read'
 
 # $env:"credentials" SPOTIPY_CLIENT_ID='your-spotify-client-id'
