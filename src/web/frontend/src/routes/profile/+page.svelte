@@ -19,17 +19,17 @@
 
     const AUTHORIZE_URI = `${SPOTIFY_AUTHORIZE_ENPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI_AFTER_LOGIN}&scope=${SCOPES_URI_PARAM}&response_type=token&show_dialog=true`
 
-    onMount(async() => {
-        console.log('on mount');
-        if (window.location.hash) {
-            console.log('hash exists');
-            let params = getReturnedParamsFromSpotifyAuth(window.location.hash);
-            access_token = params.access_token;
-            expires_in = params.expires_in;
-            token_type = params.token_type;
-            getProfile()
-        }
-    })
+    // onMount(async() => {
+    //     console.log('on mount');
+    //     if (window.location.hash) {
+    //         console.log('hash exists');
+    //         let params = getReturnedParamsFromSpotifyAuth(window.location.hash);
+    //         access_token = params.access_token;
+    //         expires_in = params.expires_in;
+    //         token_type = params.token_type;
+    //         getProfile()
+    //     }
+    // })
 
     const handleLogin = () => {
         // if (typeof window !== "undefined") {

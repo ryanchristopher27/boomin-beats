@@ -1,5 +1,5 @@
 <script>
-	import { Recommendations } from "$lib";
+	import { Recommendations, FeatureRadar } from "$lib";
 
 	let searchValue = '';
 
@@ -82,35 +82,40 @@
 </svelte:head>
 
 <div class='body-div'>
-	<div class='search-div'>
-		<!-- <input type="text" placeholder="Search.." bind:value={searchValue} on:change={getSearchSongs} on:input={getSearchSongs}>
-		{#if tracks.length > 0}
-		{#each tracks as track, i}
-			<option value={track.title} on:click={() => {updatedSelectedSong(track.title, i)}}>{track.title} By: {track.artists[0]}</option>
-		{/each}
-		{/if} -->
+	<div class='recommendations-div'>
+		<div class='search-div'>
+			<!-- <input type="text" placeholder="Search.." bind:value={searchValue} on:change={getSearchSongs} on:input={getSearchSongs}>
+			{#if tracks.length > 0}
+			{#each tracks as track, i}
+				<option value={track.title} on:click={() => {updatedSelectedSong(track.title, i)}}>{track.title} By: {track.artists[0]}</option>
+			{/each}
+			{/if} -->
 
-		<input class="searchbar" list="searchbar" name="searchbar" placeholder="Search.." bind:value={searchValue} on:change={getSearchSongs} on:input={getSearchSongs} />
-		<datalist id="searchbar">
-		{#each tracks as track, i}
-			<option value={track.title} on:click={() => {updatedSelectedSong(track.title)}}>{track.title} By: {track.artists[0]}</option>
-		{/each}
-		</datalist>
-		<button id='get-recs-button' on:click={() => {getRecommendations()}}>Get Recs</button>
+			<input class="searchbar" list="searchbar" name="searchbar" placeholder="Search.." bind:value={searchValue} on:change={getSearchSongs} on:input={getSearchSongs} />
+			<datalist id="searchbar">
+			{#each tracks as track, i}
+				<option value={track.title} on:click={() => {updatedSelectedSong(track.title)}}>{track.title} By: {track.artists[0]}</option>
+			{/each}
+			</datalist>
+			<button id='get-recs-button' on:click={() => {getRecommendations()}}>Get Recs</button>
+		</div>
+		<div class='number-of-songs-div'>
+			{#each possibleNumberOfSongs as num}
+			{#if num === numberOfSongs}
+			<button class='number-of-songs-button-selected' on:click={() => {setNumberOfSongs(num)}}>{num}</button>
+			{:else}
+			<button class='number-of-songs-button' on:click={() => {setNumberOfSongs(num)}}>{num}</button>
+			{/if}
+			{/each}
+		</div>
+
+		<Recommendations track_id={selectedSong.id} number_of_songs={numberOfSongs} />
 	</div>
-	<div class='number-of-songs-div'>
-		{#each possibleNumberOfSongs as num}
-		{#if num === numberOfSongs}
-		<button class='number-of-songs-button-selected' on:click={() => {setNumberOfSongs(num)}}>{num}</button>
-		{:else}
-		<button class='number-of-songs-button' on:click={() => {setNumberOfSongs(num)}}>{num}</button>
-		{/if}
-		{/each}
+	<div class='song-breakdown-div'>
+		<div class='song-radar-div'>
+			<FeatureRadar />
+		</div>
 	</div>
-	
-
-	<Recommendations track_id={selectedSong.id} number_of_songs={numberOfSongs} />
-
 </div>
 
 <style>
@@ -129,12 +134,20 @@
 	.body-div {
 		/* display: flex; */
 		/* height: 100vh; */
+		display: flex;
 		min-height: 100vh;
 		width: 100%;
-		background-color: var(--color-dark-gray);
+		/* background-color: var(--color-dark-gray); */
 		min-width: 800px;
-		border-radius: 20px;
+		/* border-radius: 20px; */
 		margin-top: 65px;
+	}
+
+	.recommendations-div {
+		/* width: 75%; */
+		width: 100%;
+		background-color: var(--color-dark-gray);
+		border-radius: 20px;
 	}
 
 	.search-div {
@@ -199,6 +212,21 @@
 	#get-recs-button:hover {
 		background-color: var(--color-light-blue);
 		color: var(--color-dark-gray);
+	}
+
+	.song-breakdown-div {
+		margin-left: var(--primary-spacing);
+		width: 350px;
+		min-width: 350px;
+		background-color: var(--color-dark-gray);
+		border-radius: 20px;
+	}
+
+	.song-radar-div {
+		height: 200px;
+		width: 200px;
+		margin: 0 auto;
+		margin-top: 20px;
 	}
 
 </style>
