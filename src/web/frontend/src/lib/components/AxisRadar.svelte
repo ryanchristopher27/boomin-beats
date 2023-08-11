@@ -64,18 +64,10 @@
 		>
 		</line>
 		<text
-			class="label-text"
 			text-anchor="{anchor($config.x.length, i)}"
 			dy="0.35em"
 			font-size="12px"
+			fill="white"
 			transform="translate({(labelPlacement) * Math.cos(thisAngleSlice)}, {labelPlacement * Math.sin(thisAngleSlice)})">{label}</text>
 	{/each}
 </g>
-
-<style>
-	.label-text {
-		color: white;
-		background-color: white;
-		/* stroke: white; */
-	}
-</style>
