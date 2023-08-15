@@ -12,6 +12,8 @@ Ryan's Boomin' Beats
         ~\.venv\ryans-boomin-beats-venv\Scripts\activate.ps1
     ##### CMD
         ~\.venv\ryans-boomin-beats-venv\Scripts\activate.bat
+    ##### MacOS
+        source ~/.venv/ryans-boomin-beats-venv/bin/activate
 
 ## Django
 ### Download Django in Virtual Environment
