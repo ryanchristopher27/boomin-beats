@@ -27,7 +27,7 @@ def index(request):
 
     # scope = "user-library-read"
 
-    searchValue = request.GET['searchValue']
+    searchValue = 'test'
     # print(searchValue)
 
     sp_oauth = SpotifyOAuth(client_id=CLIENT_ID,
@@ -41,7 +41,8 @@ def index(request):
 
     spotify_obj = Spotify(auth=access_token)
 
-    # https://open.spotify.com/track/6wsqVwoiVH2kde4k4KKAFU?si=d69de43ef5344e96
+    current_user = spotify_obj.current_user()
+
 
     tracks = spotify_obj.search(q='track:'+searchValue)
     # print('Track', json.dumps(tracks, sort_keys=False, indent=4))
@@ -64,7 +65,7 @@ def index(request):
     # return HttpResponse(json.dumps(searchSuggestionObjects, sort_keys=False, indent=4))
 
     # Create a JsonResponse with the response data
-    json_response = JsonResponse(response)
+    json_response = JsonResponse(current_user)
 
     # Set the CORS headers in the response
     json_response["Access-Control-Allow-Origin"] = "http://localhost:5173"  # Replace with your frontend URL

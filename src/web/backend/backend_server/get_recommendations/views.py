@@ -13,7 +13,7 @@ from spotipy.oauth2 import SpotifyClientCredentials
 
 CLIENT_ID = 'a6e889c6521040a797bdda3dbb27b451'
 CLIENT_SECRET = '77e4125490d5481bb89b5891dbb4458c'
-REDIRECT_URI = 'https://example.com/callback'
+REDIRECT_URI = 'http://localhost:5173/profile'
 SCOPE = 'user-library-read'
 
 # $env:"credentials" SPOTIPY_CLIENT_ID='your-spotify-client-id'
@@ -48,18 +48,24 @@ def index(request):
     recommendations = spotify_obj.recommendations(seed_tracks=[track_id], limit=number_of_songs)
     # print('Track', json.dumps(tracks, sort_keys=False, indent=4))
 
-    # print(json.dumps(recommendations, sort_keys=False, indent=4))
+    print(json.dumps(recommendations, sort_keys=False, indent=4))
     recommendationsObjects = []
     for track in recommendations['tracks']:
         recommendationsObjects.append({
             'title': track['name'],
             'artists': [artist['name'] for artist in track['artists']],
-            'id': track['id']
+            'id': track['id'],
+            'image': track['album']['images'][2]['url'],
+            'image_size': track['album']['images'][2]['height'],
+            'duration_ms': track['duration_ms'],
+            'explicit': track['explicit'],
+            'track_url': track['external_urls']['spotify'],
+            'album': track['album']['name'],
         })
 
     # return HttpResponse(json.dumps(recommendations, sort_keys=False, indent=4))
 
-    print(json.dumps(recommendationsObjects, sort_keys=False, indent=4))
+    # print(json.dumps(recommendationsObjects, sort_keys=False, indent=4))
     response = {
         'type': 'recommendations',
         'tracks': recommendationsObjects,

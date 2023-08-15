@@ -28,6 +28,8 @@ Ryan's Boomin' Beats
     python manage.py runserver
 ##### Specify Port
     python manage.py runserver 8000
+##### Fix 'Watching for file changes with StatReloader
+    python manage.py runserver --noreload
 
 ### Add Django App to Project
     python manage.py startapp <app_name>
@@ -42,12 +44,16 @@ Ryan's Boomin' Beats
 ### Run Server
     npm run dev
 
+## NPM Packages
 
-## Spotipy
-### Install
+### Spotipy
     pip install spotipy --upgrade
-
-
+## d3-shape
+    npm install d3-shape
+## d3-scale
+    npm install d3-scale
+## Layercake
+    npm install --save layercake
 
 ## Links
 ### Django
@@ -56,4 +62,18 @@ Ryan's Boomin' Beats
     - https://spotipy.readthedocs.io/en/2.22.1/
     - https://www.javatpoint.com/spotify-api-python
     - https://www.youtube.com/watch?v=cU8YH2rhN6A
+### Styling
+    - https://svelte.dev/repl/cb6bb95b7d1549f7be8d8fc7258ea1da?version=3.46.2
     
+
+### Youtube
+    - https://www.youtube.com/watch?v=G_WFk4wg9fk
+    
+    
+
+## Styles
+### Color Palette
+    - Light Blue: #5ec9ff
+    - Purple: #a235ff
+    - Dark Gray: #242424
+    - Gray: #444444

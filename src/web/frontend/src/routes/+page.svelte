@@ -1,17 +1,23 @@
 <script>
-	import { Recommendations } from "$lib";
+	import { Recommendations, FeatureRadar } from "$lib";
 
 	let searchValue = '';
 
-	let selectedTitle = '';
-	let selectedArtists = [];
-	let selectedId = '';
+	let selectedSong = {};
+
+	// let selectedTitle = '';
+	// let selectedArtists = [];
+	// let selectedId = '';
 
 	let isSelected = false;
 
 	let tracks = [];
+	let trackTitles = [];
 
-	let showRecommendations = false;
+	let possibleNumberOfSongs = [10, 25, 50];
+	let numberOfSongs = 25;
+
+	// let showRecommendations = false;
 
 	const myHeaders = new Headers();
 	myHeaders.append("Access-Control-Allow-Origin", "http://127.0.0.1:8000/search/");
@@ -28,9 +34,11 @@
 
 			const jsonResponse = await response.json()
 			tracks = jsonResponse.tracks
-			selectedTitle = tracks[0].title
-			selectedArtists = tracks[0].artists
-			selectedId = tracks[0].id
+			trackTitles = tracks.map((track) => track.title)
+			// selectedTitle = tracks[0].title
+			// selectedArtists = tracks[0].artists
+			// selectedId = tracks[0].id
+
 			// searchValue = selectedSong
 		} catch (error) {
 			// Handle any errors that occurred during the fetch request.
@@ -38,28 +46,33 @@
 		}
 	}
 
-	let updatedSelectedSong = (selectedTrack, index) => {
+	let updatedSelectedSong = (selectedTrack) => {
+		console.log('Selected Track:', selectedTrack)
+		let index = trackTitles.indexOf(selectedTrack)
 		isSelected = true;
 		searchValue = selectedTrack;
-		selectedTitle = tracks[index].title
-		selectedArtists = tracks[index].artists
-		selectedId = tracks[index].id
-		console.log('Search Value: ', searchValue)
-		console.log('selected Title: ', selectedTitle)
-		console.log('selected Artists: ', selectedArtists)
-		console.log('selected ID: ', selectedId)
-
+		selectedSong = tracks[index]
 		tracks = []
+		trackTitles = []
 	}
 
 	let getRecommendations = () => {
 		console.log('Get Recommendations')
-		showRecommendations = true;
+		updatedSelectedSong(searchValue)
 	}
 
-	$: embedUrl = `https://open.spotify.com/embed/track/${selectedId}?utm_source=generator&theme=0`
+	let setNumberOfSongs = (number) => {
+		numberOfSongs = number;
+
+	}
+
+	// $: embedUrl = `https://open.spotify.com/embed/track/${selectedSong.id}?utm_source=generator&theme=0`
 
 	$: console.log(tracks)
+
+	$: console.log(selectedSong)
+
+	// $: console.log(selectedTitle, selectedId)
 
 </script>
 
@@ -68,47 +81,45 @@
 	<meta name="description" content="Song Search" />
 </svelte:head>
 
-<section>
-	<div id='searchbar'>
-		<input type="text" placeholder="Search.." bind:value={searchValue} on:change={getSearchSongs} on:input={getSearchSongs}>
-		{#if tracks.length > 0}
-		{#each tracks as track, i}
-			<option value={track.title} on:click={() => {updatedSelectedSong(track.title, i)}}>{track.title} By: {track.artists[0]}</option>
-			<!-- <div class='search_dropdown' bind:value={track.title}>{track.title} By: {track.artists[0]}</div> -->
-			<!-- <a  on:click={updatedSelectedSong}>{track.title} By: {track.artists[0]}</a>  -->
-		{/each}
-		{/if}
-		<!-- {#if tracks.length > 0}
-		<select name='search-dropdown' id='search-dropdown' bind:value={selectedSong} on:change={updatedSelectedSong}>
-			{#each tracks as track}
-				<option value={track.title}>{track.title} By: {track.artists[0]}</option> 
+<div class='body-div'>
+	<div class='recommendations-div'>
+		<div class='search-div'>
+			<!-- <input type="text" placeholder="Search.." bind:value={searchValue} on:change={getSearchSongs} on:input={getSearchSongs}>
+			{#if tracks.length > 0}
+			{#each tracks as track, i}
+				<option value={track.title} on:click={() => {updatedSelectedSong(track.title, i)}}>{track.title} By: {track.artists[0]}</option>
 			{/each}
-		</select>
-		{/if} -->
-		<!-- <button value="Test" on:click={getSearchSongs}>Fetch SearchSongs</button> -->
+			{/if} -->
+
+			<input class="searchbar" list="searchbar" name="searchbar" placeholder="Search.." bind:value={searchValue} on:change={getSearchSongs} on:input={getSearchSongs} />
+			<datalist id="searchbar">
+			{#each tracks as track, i}
+				<option value={track.title} on:click={() => {updatedSelectedSong(track.title)}}>{track.title} By: {track.artists[0]}</option>
+			{/each}
+			</datalist>
+			<button id='get-recs-button' on:click={() => {getRecommendations()}}>Get Recs</button>
+		</div>
+		<div class='number-of-songs-div'>
+			{#each possibleNumberOfSongs as num}
+			{#if num === numberOfSongs}
+			<button class='number-of-songs-button-selected' on:click={() => {setNumberOfSongs(num)}}>{num}</button>
+			{:else}
+			<button class='number-of-songs-button' on:click={() => {setNumberOfSongs(num)}}>{num}</button>
+			{/if}
+			{/each}
+		</div>
+
+		<Recommendations track_id={selectedSong.id} number_of_songs={numberOfSongs} />
 	</div>
-
-	<!-- {#if isSelected}
-	<iframe style="border-radius:12px" src={embedUrl} width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-	{/if} -->
-
-	<!-- {#if isSelected}
-	<div id='selected-song-div'>
-		<h2>Selected Song</h2>
-		<p id='selected-song-title'>{selectedTitle}</p>
-		<p id='selected-song-artist'>{selectedArtists}</p>
-		<p id='selected-song-id'>{selectedId}</p>
+	<div class='song-breakdown-div'>
+		<div class='song-radar-div'>
+			<FeatureRadar />
+		</div>
 	</div>
-	{/if} -->
-	
-	<button id='get-recs-button' on:click={() => {getRecommendations()}}>Get Recommendations</button>
-
-	<Recommendations track_id={selectedId} number_of_songs={25} show_tracks={showRecommendations} />
-
-</section>
+</div>
 
 <style>
-	section {
+	/* section {
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
@@ -118,21 +129,104 @@
 
 	h1 {
 		width: 100%;
+	} */
+
+	.body-div {
+		/* display: flex; */
+		/* height: 100vh; */
+		display: flex;
+		min-height: 100vh;
+		width: 100%;
+		/* background-color: var(--color-dark-gray); */
+		min-width: 800px;
+		/* border-radius: 20px; */
+		margin-top: 65px;
 	}
 
-	.welcome {
-		display: block;
-		position: relative;
+	.recommendations-div {
+		/* width: 75%; */
 		width: 100%;
-		height: 0;
-		padding: 0 0 calc(100% * 495 / 2048) 0;
+		background-color: var(--color-dark-gray);
+		border-radius: 20px;
 	}
 
-	.welcome img {
-		position: absolute;
-		width: 100%;
-		height: 100%;
-		top: 0;
-		display: block;
+	.search-div {
+		display: flex;
+		width: 80%;
+		min-width: 640px;
+		margin-left: 10%;
+		margin-top: 20px;
 	}
+
+	.searchbar {
+		height: 24px;
+		width: 90%;
+		min-width: 292px;
+		/* margin: 20px 0 0 0; */
+		background-color: var(--color-dark-gray);
+		color: var(--color-light-blue);
+		border: 2px solid var(--color-light-blue);
+		border-radius: 10px;
+	}
+
+	.number-of-songs-div {
+		display: flex;
+		width: 80%;
+		min-width: 640px;
+
+		margin: 20px 0 20px 10%;
+	}
+
+	.number-of-songs-button {
+		height: 30px;
+		width: 10%;
+		margin-left: 15%;
+		background-color: var(--color-dark-gray);
+		color: var(--color-light-blue);
+		border: 2px solid var(--color-light-blue);
+		border-radius: 10px;
+	}
+
+	.number-of-songs-button-selected {
+		height: 30px;
+		width: 10%;
+		margin-left: 15%;
+		background-color: var(--color-light-blue);
+		color: var(--color-dark-gray);
+		border: 2px solid var(--color-light-blue);
+		border-radius: 10px;
+	}
+
+	#get-recs-button {
+		height: 30px;
+		width: 10%;
+		/* margin: 10px 0 0 10px; */
+		margin-left: 10px;
+		min-width: 90px;
+		background-color: var(--color-dark-gray);
+		color: var(--color-light-blue);
+		border: 2px solid var(--color-light-blue);
+		border-radius: 10px;
+	}
+
+	#get-recs-button:hover {
+		background-color: var(--color-light-blue);
+		color: var(--color-dark-gray);
+	}
+
+	.song-breakdown-div {
+		margin-left: var(--primary-spacing);
+		width: 350px;
+		min-width: 350px;
+		background-color: var(--color-dark-gray);
+		border-radius: 20px;
+	}
+
+	.song-radar-div {
+		height: 200px;
+		width: 200px;
+		margin: 0 auto;
+		margin-top: 20px;
+	}
+
 </style>

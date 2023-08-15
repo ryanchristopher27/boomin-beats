@@ -1,34 +1,45 @@
 <script>
 	import { page } from '$app/stores';
-	import logo from '$lib/images/svelte-logo.svg';
-	import github from '$lib/images/github.svg';
+	import { BoominBeatsLogo } from '$lib';
+
+	export let current_page = 'Home';
 </script>
 
 <header>
-	<div class="corner">
-		<a href="https://kit.svelte.dev">
-			<img src={logo} alt="SvelteKit" />
-		</a>
-	</div>
+	<div class="header-div">
+		<div class="logo-div">
+			<img src={BoominBeatsLogo} alt="BoominBeatsLogo" id="boomin-beats-logo"/>
+		</div>
 
-	<nav>
-		<svg viewBox="0 0 2 3" aria-hidden="true">
-			<path d="M0,0 L1,2 C1.5,3 1.5,3 2,3 L2,0 Z" />
-		</svg>
-		<ul>
-			<li aria-current={$page.url.pathname === '/' ? 'page' : undefined}>
-				<a href="/">Home</a>
-			</li>
-		</ul>
-		<svg viewBox="0 0 2 3" aria-hidden="true">
-			<path d="M0,0 L0,3 C0.5,3 0.5,3 1,2 L2,0 Z" />
-		</svg>
-	</nav>
+		<nav>
+			{#if current_page == 'Home'}
+			<div class='nav-button-div'>
+				<a class="nav-button-active" href="/">Home</a>
+			</div>
+			{:else}
+			<div class='nav-button-div'>
+				<a class="nav-button" href="/">Home</a>
+			</div>
+			{/if}
 
-	<div class="corner">
-		<a href="https://github.com/sveltejs/kit">
-			<img src={github} alt="GitHub" />
-		</a>
+			<div class='nav-button-div'>
+				<a class="nav-button" href="/account_analysis/">Account Analysis</a>
+			</div>
+			<div class='nav-button-div'>
+				<a class="nav-button" href="/profile/">Profile</a>
+			</div>
+			<!-- <svg viewBox="0 0 2 3" aria-hidden="true">
+				<path d="M0,0 L1,2 C1.5,3 1.5,3 2,3 L2,0 Z" />
+			</svg>
+			<ul>
+				<li aria-current={$page.url.pathname === '/' ? 'page' : undefined}>
+					<a href="/">Home</a>
+				</li>
+			</ul>
+			<svg viewBox="0 0 2 3" aria-hidden="true">
+				<path d="M0,0 L0,3 C0.5,3 0.5,3 1,2 L2,0 Z" />
+			</svg> -->
+		</nav>
 	</div>
 </header>
 
@@ -36,25 +47,41 @@
 	header {
 		display: flex;
 		justify-content: space-between;
+		position: fixed;
+		top: 0;
+		width: 98%;
+		min-width: 800px;
+		background-color: var(--color-light-blue);
+		/* margin: var(--primary-spacing) var(--primary-spacing) 0 var(--primary-spacing); */
+		padding: var(--primary-spacing);
 	}
 
-	.corner {
-		width: 3em;
-		height: 3em;
-	}
-
-	.corner a {
+	.header-div {
 		display: flex;
-		align-items: center;
-		justify-content: center;
+		height: 50px;
+		background-color: #242424;
 		width: 100%;
-		height: 100%;
+		min-width: 800px;
+		border-bottom: 2px solid var(--color-light-blue);
+		border-radius: 20px;
 	}
 
-	.corner img {
-		width: 2em;
-		height: 2em;
-		object-fit: contain;
+	#boomin-beats-logo {
+		height: 40px;
+		margin-top: 5px;
+		margin-left: 5px;
+	}
+
+	.nav-button-div {
+		height: 50px;
+		/* padding: 10px 0; */
+	}
+
+	.nav-button {
+		margin: 8px 20px;
+		height: 30px;
+		border: 2px solid #5ec9ff;
+		border-radius: 20px;
 	}
 
 	nav {
@@ -63,52 +90,12 @@
 		--background: rgba(255, 255, 255, 0.7);
 	}
 
-	svg {
-		width: 2em;
-		height: 3em;
-		display: block;
-	}
-
-	path {
-		fill: var(--background);
-	}
-
-	ul {
-		position: relative;
-		padding: 0;
-		margin: 0;
-		height: 3em;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		list-style: none;
-		background: var(--background);
-		background-size: contain;
-	}
-
-	li {
-		position: relative;
-		height: 100%;
-	}
-
-	li[aria-current='page']::before {
-		--size: 6px;
-		content: '';
-		width: 0;
-		height: 0;
-		position: absolute;
-		top: 0;
-		left: calc(50% - var(--size));
-		border: var(--size) solid transparent;
-		border-top: var(--size) solid var(--color-theme-1);
-	}
-
 	nav a {
 		display: flex;
-		height: 100%;
+		/* height: 40px; */
 		align-items: center;
 		padding: 0 0.5rem;
-		color: var(--color-text);
+		color: var(--color-light-blue);
 		font-weight: 700;
 		font-size: 0.8rem;
 		text-transform: uppercase;
@@ -118,6 +105,17 @@
 	}
 
 	a:hover {
-		color: var(--color-theme-1);
+		/* color: var(--color-dark-gray);
+		background-color: var(--color-purple); */
+		border-color: var(--color-purple);
+	}
+
+	.nav-button-active {
+		color: var(--color-dark-gray);
+		background-color: var(--color-light-blue);
+		margin: 8px 20px;
+		height: 30px;
+		border: 2px solid #5ec9ff;
+		border-radius: 20px;
 	}
 </style>

@@ -27,38 +27,27 @@ def index(request):
 
     # scope = "user-library-read"
 
-    searchValue = request.GET['searchValue']
-    # print(searchValue)
 
-    sp_oauth = SpotifyOAuth(client_id=CLIENT_ID,
-                            client_secret=CLIENT_SECRET,
-                            redirect_uri=REDIRECT_URI,
-                            scope=SCOPE)
-    # sp = Spotify(client_credentials_manager=SpotifyClientCredentials())
+    access_token = request.GET['access_token']
 
-    access_token_dict = sp_oauth.get_access_token()  
-    access_token = access_token_dict['access_token']
+    # sp_oauth = SpotifyOAuth(client_id=CLIENT_ID,
+    #                         client_secret=CLIENT_SECRET,
+    #                         redirect_uri=REDIRECT_URI,
+    #                         scope=SCOPE)
+
+    # access_token_dict = sp_oauth.get_access_token()  
+    # access_token = access_token_dict['access_token']
 
     spotify_obj = Spotify(auth=access_token)
 
-    # https://open.spotify.com/track/6wsqVwoiVH2kde4k4KKAFU?si=d69de43ef5344e96
+    current_user = spotify_obj.current_user()
 
-    tracks = spotify_obj.search(q='track:'+searchValue)
-    # print('Track', json.dumps(tracks, sort_keys=False, indent=4))
 
-    searchSuggestionObjects = []
-    for track in tracks['tracks']['items']:
-        searchSuggestionObjects.append({
-            'title': track['name'],
-            'artists': [artist['name'] for artist in track['artists']],
-            'id': track['id']
-        })
-
-    print(json.dumps(searchSuggestionObjects, sort_keys=False, indent=4))
+    print(json.dumps(current_user, sort_keys=False, indent=4))
 
     response = {
-        'type': 'searchSongs',
-        'tracks': searchSuggestionObjects,
+        'type': 'get_profile',
+        'profile': current_user,
     }
 
     # return HttpResponse(json.dumps(searchSuggestionObjects, sort_keys=False, indent=4))
