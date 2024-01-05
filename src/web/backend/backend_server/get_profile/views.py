@@ -45,12 +45,51 @@ def index(request):
     # current_user = spotify_obj.current_user()
     current_user = spotify_obj.me()
 
+    top_artists = spotify_obj.current_user_top_artists(
+        limit = 10,
+        offset = 0,
+        time_range = 'long_term'
+    )
 
-    print(json.dumps(current_user, sort_keys=False, indent=4))
+    top_tracks = spotify_obj.current_user_top_tracks(
+        limit = 10,
+        offset = 0,
+        time_range = 'long_term'
+    )
+
+    top_artists_objects = []
+    for artist in top_artists['items']:
+        top_artists_objects.append({
+            'name': artist['name'],
+            'id': artist['id'],
+            'genres': artist['genres'],
+            'popularity': artist['popularity'],
+            'images': artist['images'],
+            'url': artist['external_urls']['spotify']
+        })
+    
+    top_tracks_objects = []
+    for track in top_tracks['items']:
+        top_tracks_objects.append({
+            'title': track['name'],
+            'artists': [artist['name'] for artist in track['artists']],
+            'id': track['id'],
+            'image': track['album']['images'][2]['url'],
+            'image_size': track['album']['images'][2]['height'],
+            'duration_ms': track['duration_ms'],
+            'explicit': track['explicit'],
+            'track_url': track['external_urls']['spotify'],
+            'album': track['album']['name'],
+        })
+
+
+    print(json.dumps(top_artists_objects, sort_keys=False, indent=4))
 
     response = {
         'type': 'get_profile',
         'profile': current_user,
+        'top_artists': top_artists_objects,
+        'top_tracks': top_tracks_objects
     }
 
     # return HttpResponse(json.dumps(searchSuggestionObjects, sort_keys=False, indent=4))

@@ -9,6 +9,8 @@
     let token_type = '';
 
     let user_profile = {};
+    let top_artists = [];
+    let top_tracks = [];
 
     let logged_in = false;
 
@@ -86,13 +88,24 @@
 
 			const jsonResponse = await response.json();
 			user_profile = jsonResponse.profile;
+            top_artists = jsonResponse.top_artists;
+            top_tracks = jsonResponse.top_tracks;
             console.log(user_profile);
+            console.log(top_artists);
+            console.log(top_tracks);
             logged_in = true;
 
 		} catch (error) {
 			// Handle any errors that occurred during the fetch request.
 			console.error('Error fetching data:', error);
 		}
+    }
+
+    function millisToMinutesAndSeconds(millis) {
+        let minutes = Math.floor(millis / 60000);
+        let seconds = ((millis % 60000) / 1000).toFixed(0);
+        return (seconds == 60 ? (minutes+1) + ":00" : minutes + ":" + (Number(seconds) < 10 ? "0" : "") + seconds
+        );    
     }
 
     // $: console.log(window.location.hash)
@@ -136,6 +149,79 @@
             Followers: {user_profile.followers.total}
         </div>
     </div>
+    <div class='top-div'>
+        <div class='top-artists-div'>
+            <div class='top-artists-header-div'>
+                Top Artists
+            </div>
+            <hr class='track-splitter'>
+            {#each top_artists as artist, i}
+                <div class='top-artist-div'>
+                    <div class='artist-number-div'>
+                        {i+1}
+                    </div>
+                    <img src={artist.images[2].url} alt="{artist.album}" class="artist-image"/>
+                    <div class='artist-name-div'>
+                        {artist.name}
+                    </div>
+                    <div class='artist-genres-div'>
+                        {artist.genres}
+                    </div>
+                    <div class='artist-popularity-div'>
+                        {artist.popularity}
+                    </div>
+                </div>
+                {#if i != top_artists.length-1}
+                    <hr class='track-splitter'>
+                {/if}
+            {/each}
+        </div>
+        <div class='top-tracks-div'>
+            <div class='top-tracks-header-div'>
+                Top Tracks
+            </div>
+            {#each top_tracks as track, i}
+                <div class='top-track-div'>
+                    <div class='track-number-div'>
+                        {i+1}
+                    </div>
+                    <img src={track.image} alt="{track.album}" class="track-image"/>
+                    <div class='title-artist-div'>
+                        <div class='title-div'>
+                            {track.title}
+                        </div>
+                        <div class='artist-div'>
+                            {#if track.explicit === true}
+                                <div class='explicit-div'>
+                                    E
+                                </div>
+                            {/if}
+                            {#each track.artists as artist, i}
+                                <div class='each-artist-div'>
+                                    {#if i === track.artists.length - 1}
+                                        {artist}
+                                    {:else}
+                                        {artist},
+                                    {/if}
+                                </div>
+                            {/each}
+                        </div>
+                    </div>
+                    <div class='album-div'>
+                        {track.album}
+                    </div>
+                    <div class='duration-div'>
+                        {millisToMinutesAndSeconds(Number(track.duration_ms))}
+                    </div>
+                </div>
+                {#if i != top_tracks.length-1}
+                    <hr class='track-splitter'>
+                {/if}
+            <!-- <iframe style="border-radius:12px" src={`https://open.spotify.com/embed/track/${track.id}?utm_source=generator&theme=0`} width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe> -->
+            <!-- <iframe style="border-radius:12px" src={`https://open.spotify.com/embed/track/${track.id}?utm_source=generator`} width="100%" height="76" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe> -->
+            {/each}
+        </div>
+    </div>
     {/if}
 
 </div>
@@ -176,5 +262,114 @@
         width: 40%;
         text-align: center;
         font-size: 20px;
+    }
+
+    .top-div {
+        display: flex;
+        margin-top: 20px;
+    }
+
+    .top-artists-div {
+        width: 49%;
+        margin-right: 1%;
+        background-color: var(--color-dark-gray);
+        border-radius: 20px;
+    }
+
+    .top-artists-header-div {
+        height: 40px;
+        align-items: center;
+        text-align: center;
+    }
+
+    .top-artist-div {
+        display: flex;
+        align-content: center;
+        justify-content: center;
+    }
+
+    .artist-image {
+        height: 60px;
+        width: 60px;
+    }
+
+    .top-tracks-div {
+        width: 49%;
+        margin-left: 1%;
+        background-color: var(--color-dark-gray);
+        border-radius: 20px;
+    }
+
+    .top-track-div {
+        display: flex;
+        height: 64px;
+        align-items: center;
+    }
+
+    .track-number-div {
+        width: 5%;
+        align-items: center;
+        text-align: center;
+    }
+
+    .title-artist-div {
+        width: 40%;
+        white-space: nowrap;
+        overflow: hidden;
+        padding: 0 10px;
+    }
+
+    .title-div {
+        display: table-cell;
+        height: 40px;
+        width: 100%;
+        vertical-align: middle;
+        font-weight: bold;
+        /* text-align: center; */
+    }
+
+    .artist-div {
+        display: flex;
+        height: 24px;
+        width: 100%;
+        vertical-align: middle;
+        align-items: center;
+        /* text-align: center; */
+    }
+
+    .explicit-div {
+        height: 15px;
+        width: 15px;
+        margin-right: 5px;
+        text-align: center;
+        font-size: 12px;
+        background-color: white;
+        color: var(--color-dark-gray);
+        border-radius: 2px;
+    }
+
+    .each-artist-div {
+        margin-right: 10px;
+    }
+
+    .album-div {
+        width: 25%;
+        padding: 0 10px;
+        vertical-align: middle;
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    .duration-div {
+        width: 20%;
+        padding: 0 10px;
+        vertical-align: middle;
+        text-align: center;
+    }
+
+    .track-splitter {
+        color: white;
+        width: 95%;
     }
 </style>
