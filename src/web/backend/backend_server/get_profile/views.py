@@ -30,6 +30,8 @@ def index(request):
 
     access_token = request.GET['access_token']
 
+    print('profile test')
+
     # sp_oauth = SpotifyOAuth(client_id=CLIENT_ID,
     #                         client_secret=CLIENT_SECRET,
     #                         redirect_uri=REDIRECT_URI,
@@ -40,7 +42,8 @@ def index(request):
 
     spotify_obj = Spotify(auth=access_token)
 
-    current_user = spotify_obj.current_user()
+    # current_user = spotify_obj.current_user()
+    current_user = spotify_obj.me()
 
 
     print(json.dumps(current_user, sort_keys=False, indent=4))

@@ -1,5 +1,5 @@
 export function load({ setHeaders }) {
 	setHeaders({
-        'Content-Security-Policy': 'https://stats.g.doubleclick.net'
+        // 'Content-Security-Policy': 'https://stats.g.doubleclick.net'
 	});
 }
