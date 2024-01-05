@@ -1,5 +1,5 @@
 <script>
-	import { Recommendations, FeatureRadar } from "$lib";
+	import { Recommendations, FeatureRadar, BoominBeatsLogo } from "$lib";
 
 	let searchValue = '';
 
@@ -82,7 +82,7 @@
 </svelte:head>
 
 <div class='body-div'>
-	<div class='recommendations-div'>
+	<div class='recommendations-search-div'>
 		<div class='search-div'>
 			<!-- <input type="text" placeholder="Search.." bind:value={searchValue} on:change={getSearchSongs} on:input={getSearchSongs}>
 			{#if tracks.length > 0}
@@ -108,14 +108,19 @@
 			{/if}
 			{/each}
 		</div>
-
-		<Recommendations track_id={selectedSong.id} number_of_songs={numberOfSongs} />
 	</div>
-	<div class='song-breakdown-div'>
+	<div class='recommendations-div'>
+		{#if isSelected === true}
+		<Recommendations track_id={selectedSong.id} number_of_songs={numberOfSongs} />
+		{:else}
+			<img src={BoominBeatsLogo} alt="BoominBeatsLogo" id="boomin-beats-logo"/>
+		{/if}
+	</div>
+	<!-- <div class='song-breakdown-div'>
 		<div class='song-radar-div'>
 			<FeatureRadar />
 		</div>
-	</div>
+	</div> -->
 </div>
 
 <style>
@@ -134,7 +139,7 @@
 	.body-div {
 		/* display: flex; */
 		/* height: 100vh; */
-		display: flex;
+		/* display: flex; */
 		min-height: 100vh;
 		width: 100%;
 		/* background-color: var(--color-dark-gray); */
@@ -143,11 +148,25 @@
 		margin-top: 65px;
 	}
 
+	.recommendations-search-div {
+		/* position: fixed; */
+		width: 100%;
+		background-color: var(--color-dark-gray);
+		border-radius: 20px;
+		padding-top: 10px;
+		padding-bottom: 10px;
+		margin-top: 5px;
+	}
+
 	.recommendations-div {
 		/* width: 75%; */
 		width: 100%;
 		background-color: var(--color-dark-gray);
 		border-radius: 20px;
+		padding-top: 10px;
+		padding-bottom: 10px;
+		margin-top: 20px;
+		text-align: center;
 	}
 
 	.search-div {

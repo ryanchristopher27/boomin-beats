@@ -29,6 +29,8 @@ def index(request):
 
 
     access_token = request.GET['access_token']
+    num_of_tops = int(request.GET['num_tops'])
+    time_period = request.GET['time_period']
 
     print('profile test')
 
@@ -46,15 +48,15 @@ def index(request):
     current_user = spotify_obj.me()
 
     top_artists = spotify_obj.current_user_top_artists(
-        limit = 10,
+        limit = num_of_tops,
         offset = 0,
-        time_range = 'long_term'
+        time_range = time_period
     )
 
     top_tracks = spotify_obj.current_user_top_tracks(
-        limit = 10,
+        limit = num_of_tops,
         offset = 0,
-        time_range = 'long_term'
+        time_range = time_period
     )
 
     top_artists_objects = []

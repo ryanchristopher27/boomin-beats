@@ -1,5 +1,6 @@
 <script>
     import { onMount } from 'svelte';
+    import { BoominBeatsLogo } from "$lib";
 
     let username = '';
     let password = '';
@@ -11,6 +12,13 @@
     let user_profile = {};
     let top_artists = [];
     let top_tracks = [];
+
+    let possible_number_of_tops = [10, 25, 50];
+    let number_of_tops = 10;
+
+    let possible_time_periods = ['short_term', 'medium_term', 'long_term'];
+    let time_period = 'short_term';
+    let time_period_object = {'short_term': '1 Month', 'medium_term': '6 Months', 'long_term': 'All Time'}
 
     let logged_in = false;
 
@@ -34,16 +42,6 @@
             token_type = params.token_type;
             getProfile()
         }
-        // if (typeof window !== 'undefined') {
-        //     if (window.location.href.includes('access_token')) {
-        //         console.log('hash exists');
-        //         let params = getReturnedParamsFromSpotifyAuth(window.location.hash);
-        //         access_token = params.access_token;
-        //         expires_in = params.expires_in;
-        //         token_type = params.token_type;
-        //         getProfile()
-        //     }
-        // }
     })
 
     const handleLogin = () => {
@@ -74,7 +72,7 @@
         try {
             console.log('Get Profile Test In Try')
 			// let url = `http://127.0.0.1:8000/account-analysis/?access_token=${access_token}`
-			let url = `http://127.0.0.1:8000/get-profile/?access_token=${access_token}`
+			let url = `http://127.0.0.1:8000/get-profile/?access_token=${access_token}&num_tops=${number_of_tops}&time_period=${time_period}`
 
             console.log('Fetching User Profile')
 			const response = await fetch(url, {
@@ -108,16 +106,16 @@
         );    
     }
 
-    // $: console.log(window.location.hash)
+    let setNumberOfTops = (number) => {
+		number_of_tops = number;
+        getProfile()
+	}
+    
+    let setTimePeriod = (time) => {
+        time_period = time;
+        getProfile()
+	}
 
-    // $: if (window.location.hash) {
-    //     let params = getReturnedParamsFromSpotifyAuth(window.location.hash);
-    //     access_token = params.access_token;
-    //     expires_in = params.expires_in;
-    //     token_type = params.token_type;
-    //     console.log('access token' + access_token)
-    //     getProfile()
-    // }
 </script>
 
 <svelte:head>
@@ -140,7 +138,11 @@
     {:else}
     <div class='profile-div'>
         <div class='profile-image-div'>
+            {#if user_profile.images.length === 0}
+            <img src={BoominBeatsLogo} alt="Italian Trulli" class="profile-image">
+            {:else}
             <img src={user_profile.images[1].url} alt="Italian Trulli" class="profile-image">
+            {/if}
         </div>
         <div class='profile-name-div'>
             {user_profile.display_name}
@@ -149,18 +151,45 @@
             Followers: {user_profile.followers.total}
         </div>
     </div>
+    <div class='top-parameters-div'>
+        <div class='number-of-tops-div'>
+			{#each possible_number_of_tops as num}
+			{#if num === number_of_tops}
+			<button class='number-of-tops-button-selected' on:click={() => {setNumberOfTops(num)}}>{num}</button>
+			{:else}
+			<button class='number-of-tops-button' on:click={() => {setNumberOfTops(num)}}>{num}</button>
+			{/if}
+			{/each}
+		</div>
+        <div class='time-period-div'>
+			{#each possible_time_periods as time}
+			{#if time === time_period}
+			<button class='time-period-button-selected' on:click={() => {setTimePeriod(time)}}>{time_period_object[time]}</button>
+			{:else}
+			<button class='time-period-button' on:click={() => {setTimePeriod(time)}}>{time_period_object[time]}</button>
+			{/if}
+			{/each}
+		</div>
+    </div>
     <div class='top-div'>
         <div class='top-artists-div'>
             <div class='top-artists-header-div'>
                 Top Artists
             </div>
             <hr class='track-splitter'>
+            <div class='col-desc'>
+                <div class='col-num'>#</div>
+                <div class='col-artist'>Artist</div>
+                <div class='col-genres'>Genres</div>
+                <div class='col-popularity'>Popularity</div>
+            </div>
+            <hr class='track-splitter'>
             {#each top_artists as artist, i}
                 <div class='top-artist-div'>
-                    <div class='artist-number-div'>
+                    <div class='number-div'>
                         {i+1}
                     </div>
-                    <img src={artist.images[2].url} alt="{artist.album}" class="artist-image"/>
+                    <img src={artist.images[0].url} alt="{artist.album}" class="artist-image"/>
                     <div class='artist-name-div'>
                         {artist.name}
                     </div>
@@ -180,9 +209,17 @@
             <div class='top-tracks-header-div'>
                 Top Tracks
             </div>
+            <hr class='track-splitter'>
+            <div class='col-desc'>
+                <div class='col-num'>#</div>
+                <div class='col-title'>Title</div>
+                <div class='col-album'>Album</div>
+                <div class='col-duration'>Duration</div>
+            </div>
+            <hr class='track-splitter'>
             {#each top_tracks as track, i}
                 <div class='top-track-div'>
-                    <div class='track-number-div'>
+                    <div class='number-div'>
                         {i+1}
                     </div>
                     <img src={track.image} alt="{track.album}" class="track-image"/>
@@ -228,7 +265,7 @@
 
 <style>
     .profile-body {
-        margin-top: 65px;
+        margin-top: 70px;
     }
 
     .profile-div {
@@ -264,6 +301,43 @@
         font-size: 20px;
     }
 
+    .top-parameters-div {
+        width: 100%;
+		background-color: var(--color-dark-gray);
+		border-radius: 20px;
+		padding-top: 10px;
+		padding-bottom: 10px;
+		margin-top: 20px;
+    }
+
+    .number-of-tops-div, .time-period-div {
+		display: flex;
+		width: 80%;
+		min-width: 640px;
+
+		margin: 20px 0 20px 10%;
+	}
+
+	.number-of-tops-button, .time-period-button {
+		height: 30px;
+		width: 10%;
+		margin-left: 15%;
+		background-color: var(--color-dark-gray);
+		color: var(--color-light-blue);
+		border: 2px solid var(--color-light-blue);
+		border-radius: 10px;
+	}
+
+	.number-of-tops-button-selected, .time-period-button-selected {
+		height: 30px;
+		width: 10%;
+		margin-left: 15%;
+		background-color: var(--color-light-blue);
+		color: var(--color-dark-gray);
+		border: 2px solid var(--color-light-blue);
+		border-radius: 10px;
+	}
+
     .top-div {
         display: flex;
         margin-top: 20px;
@@ -274,23 +348,29 @@
         margin-right: 1%;
         background-color: var(--color-dark-gray);
         border-radius: 20px;
+        padding-bottom: 10px;
     }
 
     .top-artists-header-div {
         height: 40px;
         align-items: center;
         text-align: center;
+        font-size: 30px;
+        margin: 10px auto;
     }
 
     .top-artist-div {
-        display: flex;
+        /* display: flex;
         align-content: center;
-        justify-content: center;
+        justify-content: center; */
+        display: flex;
+        height: 64px;
+        align-items: center;
     }
 
     .artist-image {
-        height: 60px;
-        width: 60px;
+        height: 64px;
+        width: 64px;
     }
 
     .top-tracks-div {
@@ -298,6 +378,15 @@
         margin-left: 1%;
         background-color: var(--color-dark-gray);
         border-radius: 20px;
+        padding-bottom: 10px;
+    }
+
+    .top-tracks-header-div {
+        height: 40px;
+        align-items: center;
+        text-align: center;
+        font-size: 30px;
+        margin: 10px auto;
     }
 
     .top-track-div {
@@ -306,7 +395,7 @@
         align-items: center;
     }
 
-    .track-number-div {
+    .number-div {
         width: 5%;
         align-items: center;
         text-align: center;
@@ -317,6 +406,14 @@
         white-space: nowrap;
         overflow: hidden;
         padding: 0 10px;
+    }
+
+    .artist-name-div {
+        width: 33%;
+        white-space: nowrap;
+        overflow: hidden;
+        padding: 0 10px;
+        font-weight: bold;
     }
 
     .title-div {
@@ -361,10 +458,52 @@
         overflow: hidden;
     }
 
-    .duration-div {
+    .artist-genres-div {
+        width: 32%;
+        padding: 0 10px;
+        vertical-align: middle;
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    .duration-div, .artist-popularity-div {
         width: 20%;
         padding: 0 10px;
         vertical-align: middle;
+        text-align: center;
+    }
+
+    .col-desc {
+        display: flex;
+        height: 1rem;
+    }
+
+    .col-num {
+        width: 5%;
+        text-align: center;
+    }
+
+    .col-artist {
+        width: 40%;
+        text-align: center;
+    }
+
+    .col-genres {
+        width: 34%;
+        text-align: center;
+    }
+
+    .col-title{
+        width: 47%;
+        text-align: center;
+    }
+    .col-album{
+        width: 27%;
+        text-align: center;
+    }
+    .col-duration, .col-popularity {
+        width: 21%;
         text-align: center;
     }
 
