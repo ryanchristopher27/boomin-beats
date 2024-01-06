@@ -1,8 +1,13 @@
 <script>
-	import { page } from '$app/stores';
+	import { page } from '../stores.js';
 	import { BoominBeatsLogo } from '$lib';
+	import { stackOrderDescending } from 'd3-shape';
+	import { onMount } from 'svelte';
 
-	export let current_page = 'Home';
+	let current_page = 'Home';
+
+	$: console.log('page: ', $page)
+	
 </script>
 
 <header>
@@ -12,22 +17,28 @@
 		</div>
 
 		<nav>
-			{#if current_page == 'Home'}
+			{#if $page === 'Home'}
 			<div class='nav-button-div'>
 				<a class="nav-button-active" href="/">Home</a>
-			</div>
-			{:else}
-			<div class='nav-button-div'>
-				<a class="nav-button" href="/">Home</a>
-			</div>
-			{/if}
-
-			<div class='nav-button-div'>
-				<a class="nav-button" href="/account_analysis/">Account Analysis</a>
 			</div>
 			<div class='nav-button-div'>
 				<a class="nav-button" href="/profile/">Profile</a>
 			</div>
+			{:else if $page === 'Profile'}
+			<div class='nav-button-div'>
+				<a class="nav-button" href="/">Home</a>
+			</div>
+			<div class='nav-button-div'>
+				<a class="nav-button-active" href="/profile/">Profile</a>
+			</div>
+			{/if}
+
+			<!-- <div class='nav-button-div'>
+				<a class="nav-button" href="/account_analysis/">Account Analysis</a>
+			</div> -->
+			<!-- <div class='nav-button-div'>
+				<a class="nav-button" href="/profile/">Profile</a>
+			</div> -->
 			<!-- <svg viewBox="0 0 2 3" aria-hidden="true">
 				<path d="M0,0 L1,2 C1.5,3 1.5,3 2,3 L2,0 Z" />
 			</svg>

@@ -2,10 +2,12 @@
     import { onMount } from 'svelte';
     import { BoominBeatsLogo } from "$lib";
 
+    import { page, user, access_token} from '../../stores.js'
+
     let username = '';
     let password = '';
 
-    let access_token = '';
+    let token = $access_token;
     let expires_in = '';
     let token_type = '';
 
@@ -33,13 +35,16 @@
 
     onMount(async() => {
         console.log('on mount');
+        $page = 'Profile';
+        console.log('page in profile: ', $page)
         if (window.location.href.includes('access_token')) {
             console.log('hash exists');
             let params = getReturnedParamsFromSpotifyAuth(window.location.hash);
             // console.log(params)
-            access_token = params.access_token;
+            token = params.access_token;
             expires_in = params.expires_in;
             token_type = params.token_type;
+            $access_token = token;
             getProfile()
         }
     })
@@ -72,7 +77,7 @@
         try {
             console.log('Get Profile Test In Try')
 			// let url = `http://127.0.0.1:8000/account-analysis/?access_token=${access_token}`
-			let url = `http://127.0.0.1:8000/get-profile/?access_token=${access_token}&num_tops=${number_of_tops}&time_period=${time_period}`
+			let url = `http://127.0.0.1:8000/get-profile/?access_token=${token}&num_tops=${number_of_tops}&time_period=${time_period}`
 
             console.log('Fetching User Profile')
 			const response = await fetch(url, {
@@ -92,6 +97,7 @@
             console.log(top_artists);
             console.log(top_tracks);
             logged_in = true;
+            // $logged_in = true;
 
 		} catch (error) {
 			// Handle any errors that occurred during the fetch request.
@@ -131,9 +137,10 @@
         <label for='password'>Password</label>
         <input class='password-input' id='password' placeholder="Password..." bind:value={password}/>
     </div> -->
+    <!-- {#if $logged_in === false} -->
     {#if logged_in === false}
     <div class='login-button-div'>
-        <button on:click={handleLogin}>Login</button>
+        <button on:click={handleLogin} class='login-button'>Login with Spotify</button>
     </div>
     {:else}
     <div class='profile-div'>
@@ -264,6 +271,25 @@
 </div>
 
 <style>
+    .login-button-div {
+        display: flex;
+        width: 40%;
+        background-color: var(--color-dark-gray);
+        height: 80px;
+        border-radius: 20px;
+        margin: auto;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .login-button {
+        height: 30px;
+		background-color: var(--color-dark-gray);
+		color: var(--color-light-blue);
+		border: 2px solid var(--color-light-blue);
+		border-radius: 10px;
+    }
+
     .profile-body {
         margin-top: 70px;
     }
@@ -337,6 +363,11 @@
 		border: 2px solid var(--color-light-blue);
 		border-radius: 10px;
 	}
+
+    .login-button:hover, .number-of-tops-button:hover, .time-period-button:hover, .number-of-tops-button-selected:hover, .time-period-button-selected:hover {
+        border-color: var(--color-purple);
+        color: var(--color-purple)
+    }
 
     .top-div {
         display: flex;

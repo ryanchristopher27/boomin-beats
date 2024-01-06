@@ -1,5 +1,7 @@
 <script>
+	import { onMount } from 'svelte';
 	import { Recommendations, FeatureRadar, BoominBeatsLogo } from "$lib";
+	import { page } from '../stores.js'
 
 	let searchValue = '';
 
@@ -18,6 +20,11 @@
 	let numberOfSongs = 25;
 
 	// let showRecommendations = false;
+
+	onMount(async() => {
+        console.log('Home on Mount');
+        $page = 'Home';
+    })
 
 	const myHeaders = new Headers();
 	myHeaders.append("Access-Control-Allow-Origin", "http://127.0.0.1:8000/search/");
@@ -215,6 +222,12 @@
 		border: 2px solid var(--color-light-blue);
 		border-radius: 10px;
 	}
+
+	.number-of-songs-button:hover, .number-of-songs-button-selected:hover {
+        border-color: var(--color-purple);
+        color: var(--color-purple)
+    }
+
 
 	#get-recs-button {
 		height: 30px;
